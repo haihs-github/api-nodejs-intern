@@ -1,30 +1,43 @@
-const fs = require('fs').promises;
+const fs = require('fs');
+const fsPromises = require('fs').promises;
 const path = require('path')
 
 const dbPath = path.join(__dirname, '..', 'task.json')
 
-//hàm đọc dữ liệu từ db
-const readDB = async () =>{
-    try{
-        const data = await fs.readFile(dbPath, 'utf8')
+// bkav haihs : hàm đọc dữ liệu từ file task.json - start 
+const readDB = () => {
+    return new Promise((resolve, reject) => {
+        const stream = fs.createReadStream(dbPath, { encoding: 'utf8' });
+        let data = '';
 
-        return JSON.parse(data)
-    }catch(error){
-        console.error('Có lỗi khi đọc file database: ', error)
-        return []
-    }
-}
+        stream.on('data', (chunk) => {
+            data += chunk;
+        });
 
-// hàm ghi dữ liệu vào db
+        stream.on('end', () => {
+            try {
+                if (!data) return resolve([]); 
+                const jsonData = JSON.parse(data);
+                resolve(jsonData);
+            } catch (error) {
+                reject(error);
+            }
+        });
+
+        stream.on('error', (error) => {
+            console.error('Có lỗi khi đọc file database qua stream: ', error);
+            reject(error);
+        });
+    });
+};
+// bkav haihs : hàm đọc dữ liệu từ file task.json - start 
+
+// bkav haihs : hàm ghi dữ liệu từ file task.json - start 
 const writeDB = async (data) => {
-    try{
-        const jsonData = JSON.stringify(data, null, 2)
-
-        await fs.writeFile(dbPath, jsonData, 'utf8')
-    }catch(error){
-        console.error("lỗi khi ghi file database",error)
-    }
+   const jsonData = JSON.stringify(data, null, 2);
+    await fsPromises.writeFile(dbPath, jsonData, 'utf8');
 }
+// bkav haihs : hàm ghi dữ liệu từ file task.json - end 
 
 module.exports = {
     readDB,
