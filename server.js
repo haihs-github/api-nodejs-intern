@@ -2,7 +2,7 @@ const app = require('./app');
 const sequelize = require('./config/database');
 const PORT = process.env.PORT || 3000;
 
-// Khởi chạy hệ thống
+// BKAV HaiHS : Hàm khởi động hệ thống - start 
 const startServer = async () => {
     try {
         // Kết nối DB và đồng bộ Model
@@ -20,5 +20,6 @@ const startServer = async () => {
         process.exit(1);
     }
 };
+// BKAV HaiHS : Hàm khởi động hệ thống - end
 
 startServer();

@@ -1,3 +1,4 @@
+// BKAV HaiHS : Middleware xử lý lỗi tập trung - start 
 const errorHandler = (err, req, res, next) => {
     console.error(`[Error] ${err.message}`);
 
@@ -25,5 +26,6 @@ const errorHandler = (err, req, res, next) => {
         error: process.env.NODE_ENV === 'development' ? err.message : {}
     });
 };
+// BKAV HaiHS : Middleware xử lý lỗi tập trung - end 
 
 module.exports = errorHandler;

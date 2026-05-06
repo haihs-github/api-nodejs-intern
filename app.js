@@ -4,14 +4,12 @@ const errorHandler = require('./middlewares/error.middleware');
 
 const app = express();
 
-// Middleware thông thường: Parse Body JSON (Thay thế logic Buffer khó nhằn ở bài cũ)
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
+// BKAV HaiHS : Các middleware của hệ thống - start
+app.use(express.json()) // Middleware để parse JSON request body
 
-// Router
 app.use('/tasks', taskRoutes); // Tách riêng URL base là /tasks
 
-// Middleware đặc biệt xử lý lỗi tập trung (PHẢI NẰM CUỐI CÙNG)
-app.use(errorHandler);
+app.use(errorHandler); // Middleware xử lý lỗi tập trung
+// BKAV HaiHS : Các middleware của hệ thống - end
 
 module.exports = app;
