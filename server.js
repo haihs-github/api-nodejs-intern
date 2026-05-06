@@ -1,24 +1,24 @@
-const http = require('http');
+const app = require('./app');
+const sequelize = require('./config/database');
+const PORT = process.env.PORT || 3000;
 
-const router = require('./router');
+// Khởi chạy hệ thống
+const startServer = async () => {
+    try {
+        // Kết nối DB và đồng bộ Model
+        await sequelize.authenticate();
+        console.log('Database connection has been established successfully.');
+        
+        // Sync sẽ tự động tạo bảng nếu chưa có (không dùng { force: true } ở production)
+        await sequelize.sync(); 
+        
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+        process.exit(1);
+    }
+};
 
-const PORT = 3000;
-
-// Bkav haihs: khởi tạo server - start
-const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-    router(req, res);
-});
-// Bkav haihs: khởi tạo server - end
-
-// Bkav haihs : lắng nghe và chạy server - start
-server.listen(PORT, () => {
-    console.log(`Server đang chạy tại http://localhost:${PORT}`);
-    console.log(`Database lưu tại file tasks.json`);
-});
-// Bkav haihs : lắng nghe và chạy server - end
-
+startServer();
